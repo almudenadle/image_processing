@@ -1,4 +1,4 @@
-# image_processing
+# IMAGE PROCESSING
 Procesamiento de Imágenes con Histogram Equalization y CLAHE
 
 Este proyecto permite mejorar el contraste de imágenes utilizando dos técnicas principales:
