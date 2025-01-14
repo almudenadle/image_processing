@@ -16,11 +16,11 @@ Project Overview
 
 This project offers a Python-based solution to enhance image contrast using two methods:
 
-    Histogram Equalization: A technique that adjusts the intensity distribution of an image to utilize the entire range of possible pixel values, thereby enhancing global contrast.
-
-    CLAHE (Contrast Limited Adaptive Histogram Equalization): An advanced method that applies histogram equalization to localized regions of the image, preventing over-amplification of noise and improving local contrast.
+    Histogram Equalization
+    CLAHE (Contrast Limited Adaptive Histogram Equalization)
 
 The provided script processes all images in a specified input directory and saves the enhanced images to an output directory, allowing users to choose between the two contrast enhancement methods.
+
 Understanding Histogram Equalization
 
 Histogram Equalization is a technique used to improve the global contrast of an image by redistributing the intensity values. It transforms the intensity histogram of the image to approximate a uniform distribution, effectively spreading out the most frequent intensity values. This results in areas of lower contrast gaining a higher contrast, making the image more interpretable.
@@ -55,9 +55,13 @@ Project Structure
 The project is organized as follows:
 
 image_processing_project/
+
 ├── input_images/             # Directory containing original images
+
 ├── output_images/            # Directory where processed images will be saved
+
 ├── process_images.py         # Main Python script for processing images
+
 └── README.md                 # Project documentation
 
 Prerequisites
@@ -142,18 +146,10 @@ How It Works:
     Determine Image Type:
         The function checks the shape of the input image:
             If it has two dimensions (len(image.shape) == 2), it is treated as grayscale.
-            If it has three dimensions (len(image.shape) == 3), it is treated as a color image.
 
     For Grayscale Images:
         The function calls equalize_grayscale to perform histogram equalization directly.
 
-    For Color Images:
-        The function operates on the luminance (brightness) component only:
-            Converts the image from BGR to YCrCb color space using cv2.cvtColor.
-            Splits the image into three channels: Y (luminance), Cr, and Cb.
-            Equalizes the Y channel using the equalize_grayscale function.
-            Merges the equalized Y channel with the original Cr and Cb channels.
-            Converts the image back to BGR color space.
 
     Unsupported Format:
         If the image is neither grayscale nor color, the function raises a ValueError.
