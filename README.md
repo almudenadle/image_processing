@@ -9,13 +9,8 @@ Table of Contents
     Understanding CLAHE
     Project Structure
     Prerequisites
-    Installation Guide
     Usage Instructions
     Detailed Explanation of the Script
-    Examples
-    Performance Considerations
-    Common Issues and Troubleshooting
-    References
 
 Project Overview
 
@@ -74,24 +69,6 @@ Before running the script, ensure that you have the following installed:
     NumPy: For numerical computations.
     Matplotlib: For displaying images (optional, used in the script for visualization).
 
-Installation Guide
-
-    Clone the Repository:
-
-git clone https://github.com/yourusername/image_processing_project.git
-cd image_processing_project
-
-Set Up a Virtual Environment (Optional but Recommended):
-
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-Install Required Packages:
-
-    pip install opencv-python-headless numpy matplotlib
-
-    Note: The opencv-python-headless package is used to avoid unnecessary GUI dependencies. If you require GUI functionalities, consider installing opencv-python instead.
-
 Usage Instructions
 
 To process images using the script, use the following command:
@@ -118,132 +95,169 @@ To apply CLAHE:
 
 Detailed Explanation of the Script
 
-The process_images.py script is structured as follows:
+The script is divided into several key sections:
 
     Importing Libraries:
 
-import os
-import cv2
-import numpy as np
-from matplotlib import pyplot as plt
+    os: Handles file and directory operations.
+    cv2: OpenCV library for image processing.
+    numpy: For numerical operations, particularly with arrays.
+    matplotlib.pyplot: For visualizing images.
 
-    os: For handling directory and file operations.
-    cv2: OpenCV library for image processing functions.
-    numpy: For numerical operations, especially
-2. Definición de Funciones
+Defining Functions:
+load_image(path)
 
-El script define varias funciones para manejar la carga, procesamiento y almacenamiento de imágenes:
+    Purpose: Loads an image from the specified path in BGR format.
+    Details:
+        Uses cv2.imread to read the image.
+        If the image cannot be loaded, raises a FileNotFoundError.
 
-a. Función load_image(path):
+save_image(path, image)
 
-Esta función carga una imagen desde la ruta especificada utilizando OpenCV.
+    Purpose: Saves the processed image to the specified path.
+    Details:
+        Uses cv2.imwrite to save the image in its processed state.
 
-def load_image(path):
-    """Loads an image in BGR format."""
-    image = cv2.imread(path)
-    if image is None:
-        raise FileNotFoundError(f"Unable to load image at path: {path}")
-    return image
+show_image(title, image)
 
-    cv2.imread(path): Lee la imagen en formato BGR.
-    Verifica si la imagen se ha cargado correctamente; si no, lanza una excepción.
+    Purpose: Displays the image using Matplotlib for visualization.
+    Details:
+        Converts the image from BGR to RGB using cv2.cvtColor.
+        Uses plt.imshow to render the image with the specified title.
+        Removes axis labels for a clean display.
 
-b. Función save_image(path, image):
+Function 1: histogram_equalization(image)
 
-Guarda la imagen procesada en la ruta especificada.
+This is the main function, responsible for applying histogram equalization to either grayscale or color images.
+Parameters:
 
-def save_image(path, image):
-    """Saves the image to the specified path."""
-    cv2.imwrite(path, image)
+    image (np.ndarray): The input image, which can be either grayscale (2D array) or color (3D array).
 
-    cv2.imwrite(path, image): Escribe la imagen en el disco en la ruta proporcionada.
+Returns:
 
-c. Función display_image(title, image):
+    np.ndarray: The histogram-equalized image.
 
-Muestra la imagen utilizando Matplotlib para visualización.
+How It Works:
 
-def display_image(title, image):
-    """Displays an image using matplotlib."""
-    image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    plt.imshow(image_rgb)
-    plt.title(title)
-    plt.axis('off')
-    plt.show()
+    Determine Image Type:
+        The function checks the shape of the input image:
+            If it has two dimensions (len(image.shape) == 2), it is treated as grayscale.
+            If it has three dimensions (len(image.shape) == 3), it is treated as a color image.
 
-    cv2.cvtColor(image, cv2.COLOR_BGR2RGB): Convierte la imagen de BGR a RGB para una visualización correcta con Matplotlib.
-    plt.imshow(image_rgb): Muestra la imagen.
-    plt.title(title): Establece el título de la ventana de visualización.
-    plt.axis('off'): Oculta los ejes para una visualización más limpia.
-    plt.show(): Renderiza la imagen en una ventana emergente.
+    For Grayscale Images:
+        The function calls equalize_grayscale to perform histogram equalization directly.
 
-d. Función histogram_equalization(image):
+    For Color Images:
+        The function operates on the luminance (brightness) component only:
+            Converts the image from BGR to YCrCb color space using cv2.cvtColor.
+            Splits the image into three channels: Y (luminance), Cr, and Cb.
+            Equalizes the Y channel using the equalize_grayscale function.
+            Merges the equalized Y channel with the original Cr and Cb channels.
+            Converts the image back to BGR color space.
 
-Aplica la ecualización de histograma a una imagen en escala de grises o a cada canal de una imagen en color.
+    Unsupported Format:
+        If the image is neither grayscale nor color, the function raises a ValueError.
 
-def histogram_equalization(image):
-    """Applies histogram equalization to a grayscale or color image."""
-    if len(image.shape) == 2:  # Grayscale image
-        return cv2.equalizeHist(image)
-    elif len(image.shape) == 3:  # Color image
-        channels = cv2.split(image)
-        eq_channels = [cv2.equalizeHist(channel) for channel in channels]
-        return cv2.merge(eq_channels)
-    else:
-        raise ValueError("Unsupported image format.")
+Function 2: equalize_grayscale(image)
 
-    Para imágenes en escala de grises:
-        cv2.equalizeHist(image): Aplica la ecualización de histograma.
-    Para imágenes en color:
-        cv2.split(image): Divide la imagen en sus canales de color individuales.
-        Aplica la ecualización de histograma a cada canal por separado.
-        cv2.merge(eq_channels): Combina los canales ecualizados en una sola imagen.
+    Parameters:
+        image (np.ndarray): The input grayscale image (2D array).
 
-e. Función apply_clahe(image, clip_limit=2.0, tile_grid_size=(8, 8)):
+    Returns:
+        np.ndarray: The histogram-equalized grayscale image.
 
-Aplica CLAHE a una imagen en escala de grises o a cada canal de una imagen en color.
+    How It Works:
+    
+        Compute Histogram:
+            The function calculates the histogram of the input image using np.histogram.
+            The histogram represents the frequency of each pixel intensity value (0 to 255).
+    
+        Calculate Cumulative Distribution Function (CDF):
+            The cumulative sum of the histogram is calculated using hist.cumsum().
+            The CDF indicates the cumulative frequency of pixel intensity values.
+    
+        Normalize the CDF:
+            The CDF is normalized to map intensity values from the input range [0, 255] to the full output range [0, 255].
+            This ensures that the histogram stretches across the full range of pixel values.
+    
+        Handle Flat CDF:
+            If the CDF has no range (e.g., all pixel values are the same), the function returns the original image.
+    
+        Apply Mapping:
+            The original pixel values are remapped to new intensity values based on the normalized CDF.
+    
+        Reconstruct Image:
+            The function returns the equalized image as a 2D array.
+Function: create_custom_clahe
 
-def apply_clahe(image, clip_limit=2.0, tile_grid_size=(8, 8)):
-    """Applies CLAHE to a grayscale or color image."""
-    clahe = cv2.createCLAHE(clipLimit=clip_limit, tileGridSize=tile_grid_size)
-    if len(image.shape) == 2:  # Grayscale image
-        return clahe.apply(image)
-    elif len(image.shape) == 3:  # Color image
-        channels = cv2.split(image)
-        clahe_channels = [clahe.apply(channel) for channel in channels]
-        return cv2.merge(clahe_channels)
-    else:
-        raise ValueError("Unsupported image format.")
+    Parameters:
+    image (np.ndarray): The input grayscale image to process. Must be a 2D array.
+    clip_limit (float): The threshold for contrast limiting. Higher values result in greater contrast enhancement.
+    tile_grid_size (tuple): The grid size for dividing the image into smaller tiles. The image is split into a grid of (rows, columns).
+    
+    Steps of the Algorithm:
 
-    cv2.createCLAHE(clipLimit=clip_limit, tileGridSize=tile_grid_size): Crea un objeto CLAHE con los parámetros especificados.
-    Para imágenes en escala de grises:
-        clahe.apply(image): Aplica CLAHE a la imagen.
-    Para imágenes en color:
-        cv2.split(image): Divide la imagen en canales individuales.
-        Aplica CLAHE a cada canal por separado.
-        cv2.merge(clahe_channels): Combina los canales procesados en una sola imagen.
+    Input Validation:
+        Ensures the input image is grayscale by checking its dimensions (len(image.shape) == 2).
 
-f. Función process_images(input_folder, output_folder, method):
+    Tile Division:
+        The image is divided into small regions (tiles) based on the tile_grid_size parameter.
+        For each tile, the algorithm calculates and enhances its local contrast.
 
-Procesa todas las imágenes en la carpeta de entrada utilizando el método especificado y guarda los resultados en la carpeta de salida.
+    Histogram Calculation:
+        The histogram of pixel intensities for each tile is computed using np.histogram.
 
-def process_images(input_folder, output_folder, method):
-    """Processes all images in the input folder using the specified method and saves them to the output folder."""
-    if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
+    Histogram Clipping:
+        Limits the amplification of contrast by capping the histogram values to a predefined clip_limit.
+        Excess pixels are redistributed evenly across all intensity levels to maintain the balance.
 
-    for filename in os.listdir(input_folder):
-        input_path = os.path.join(input_folder, filename)
-        output_path = os.path.join(output_folder, filename)
+    CDF Calculation:
+        Computes the Cumulative Distribution Function (CDF) of the clipped histogram.
+        The CDF is normalized to map pixel values from the input range [0, 255] to the output range [0, 255].
 
-        try:
-            image = load_image(input_path)
-            if method == 'histogram_equalization':
-                processed_image = histogram_equalization(image)
-            elif method == 'clahe':
-                processed_image = apply_clahe(image)
-            else:
-                raise ValueError("Unrecognized method. Use 'histogram_equalization' or 'clahe'.")
-            save_image(output_path, processed_image)
-            print(f"Processed and saved: {output_path}")
-        except Exception as e:
-            print(f"Error processing {input_path}: {e}")
+    Pixel Mapping:
+        Each pixel in the tile is mapped to a new intensity value based on the normalized CDF.
+
+    Reconstruction:
+        The enhanced tiles are combined to reconstruct the full image.
+
+
+Apply_clahe 
+
+    Parameters:
+        image (np.ndarray): The input image, which can be either grayscale or color.
+        clip_limit (float): Threshold for contrast limiting in CLAHE.
+        tile_grid_size (tuple): The grid size for dividing the image into tiles.
+        
+    Behavior:
+
+        Grayscale Images:
+            Directly calls create_custom_clahe to apply CLAHE.
+    
+        Color Images:
+            Splits the image into its individual color channels using cv2.split.
+            Applies create_custom_clahe to each channel independently.
+            Merges the enhanced channels back into a single image using cv2.merge.
+
+    Error Handling:
+        If the input image is neither grayscale nor color, raises a ValueError.
+
+process_images(input_dir, output_dir, method)
+
+    Purpose: Processes all images in the input directory using the specified enhancement method and saves the results to the output directory.
+    Details:
+        Verifies that the output directory exists; if not, creates it.
+        Iterates over each file in the input directory:
+            Loads the image using load_image.
+            Applies the selected method (histogram_equalization or clahe).
+            Saves the processed image using save_image.
+            Handles errors gracefully by printing error messages.
+
+Main Entry Point:
+
+    Uses argparse to create a command-line interface.
+    Defines three arguments:
+        input_dir: Path to the folder containing input images.
+        output_dir: Path to the folder where processed images will be saved.
+        method: The processing method (histogram_equalization or clahe).
+    Parses the arguments and calls the process_images function with the specified parameters.
