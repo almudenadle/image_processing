@@ -45,6 +45,10 @@ Limitaciones:
 CLAHE
 
 Este método divide la imagen en pequeños bloques y aplica ecualización de histograma a cada uno, ajustando los valores para evitar la amplificación excesiva del contraste.
+contrast limited adaptive histogram equalization (CLAHE)
+prevents this by limiting the amplification
+• CLAHE limits the amplification by clipping the histogram
+at a predefined value before computing the CDF
 
 Ventajas:
 
