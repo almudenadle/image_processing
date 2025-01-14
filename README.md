@@ -1,77 +1,249 @@
-# IMAGE PROCESSING
-Procesamiento de Imágenes con Histogram Equalization y CLAHE
+Image Processing with Histogram Equalization and CLAHE
+Introduction
 
-Este proyecto permite mejorar el contraste de imágenes utilizando dos técnicas principales:
+Image processing is a fundamental aspect of computer vision, enabling the enhancement and analysis of visual information for various applications. Two prominent techniques for improving image contrast are Histogram Equalization and Contrast Limited Adaptive Histogram Equalization (CLAHE). This project provides a comprehensive Python script to apply these techniques to a batch of images, facilitating enhanced visual quality and better feature representation.
+Table of Contents
 
-    Histogram Equalization (Ecualización de Histograma): Mejora el contraste global redistribuyendo los valores de intensidad.
-    CLAHE (Contrast Limited Adaptive Histogram Equalization): Mejora el contraste local dividiendo la imagen en bloques pequeños y ajustando sus valores de intensidad.
+    Project Overview
+    Understanding Histogram Equalization
+    Understanding CLAHE
+    Project Structure
+    Prerequisites
+    Installation Guide
+    Usage Instructions
+    Detailed Explanation of the Script
+    Examples
+    Performance Considerations
+    Common Issues and Troubleshooting
+    References
 
+Project Overview
 
-¿Como ejecutar este proyecto?
+This project offers a Python-based solution to enhance image contrast using two methods:
 
-python procesar_imagenes.py <carpeta_entrada> <carpeta_salida> <metodo>
+    Histogram Equalization: A technique that adjusts the intensity distribution of an image to utilize the entire range of possible pixel values, thereby enhancing global contrast.
 
-    <carpeta_entrada>: Ruta a la carpeta que contiene las imágenes originales.
-    <carpeta_salida>: Ruta a la carpeta donde se guardarán las imágenes procesadas.
-    <metodo>: Método de procesamiento a utilizar. Puede ser:
-        ecualizacion (Histogram Equalization)
-        clahe (CLAHE)
+    CLAHE (Contrast Limited Adaptive Histogram Equalization): An advanced method that applies histogram equalization to localized regions of the image, preventing over-amplification of noise and improving local contrast.
 
-Ejemplo de Ejecución
+The provided script processes all images in a specified input directory and saves the enhanced images to an output directory, allowing users to choose between the two contrast enhancement methods.
+Understanding Histogram Equalization
 
-Si tienes imágenes en la carpeta imagenes/ y deseas guardarlas en resultados/ usando CLAHE, ejecuta:
+Histogram Equalization is a technique used to improve the global contrast of an image by redistributing the intensity values. It transforms the intensity histogram of the image to approximate a uniform distribution, effectively spreading out the most frequent intensity values. This results in areas of lower contrast gaining a higher contrast, making the image more interpretable.
 
-python procesar_imagenes.py imagenes_clahe/ resultados/ clahe
+Advantages:
 
-Para usar Histogram Equalization, el comando sería:
+    Enhances the overall contrast of the image.
+    Simple and efficient to implement.
 
-python procesar_imagenes.py imagenes_equalization/ resultados/ ecualizacion
+Limitations:
 
-Métodos de Mejora de Contraste
-Ecualización de Histograma
+    May amplify noise present in the image.
+    Not suitable for images with varying lighting conditions, as it applies a uniform enhancement across the entire image.
 
-Este método redistribuye los valores de intensidad para extender el rango de contraste de la imagen. Es útil para imágenes con poco contraste global.
+Understanding CLAHE
 
-Ventajas:
+Contrast Limited Adaptive Histogram Equalization (CLAHE) is an improvement over standard histogram equalization. It operates on small regions in the image, called tiles, and applies histogram equalization to each. By limiting the contrast amplification, CLAHE prevents the over-amplification of noise and avoids artifacts in homogeneous areas.
 
-    Simple y rápido de aplicar.
-    Mejora el contraste global.
+Advantages:
 
-Limitaciones:
+    Enhances local contrast, making details in different regions more visible.
+    Prevents noise amplification by limiting contrast enhancement.
+    Suitable for images with varying lighting conditions.
 
-    Puede no preservar detalles locales.
-    Puede generar artefactos en imágenes con variaciones sutiles.
+Limitations:
 
-CLAHE
+    Computationally more intensive than standard histogram equalization.
+    Requires parameter tuning (e.g., tile size, clip limit) for optimal results.
 
-Este método divide la imagen en pequeños bloques y aplica ecualización de histograma a cada uno, ajustando los valores para evitar la amplificación excesiva del contraste.
-contrast limited adaptive histogram equalization (CLAHE)
-prevents this by limiting the amplification
-• CLAHE limits the amplification by clipping the histogram
-at a predefined value before computing the CDF
+Project Structure
 
-Ventajas:
+The project is organized as follows:
 
-    Mejora el contraste local en diferentes partes de la imagen.
-    Controla la amplificación del ruido.
+image_processing_project/
+├── input_images/             # Directory containing original images
+├── output_images/            # Directory where processed images will be saved
+├── process_images.py         # Main Python script for processing images
+└── README.md                 # Project documentation
 
-Limitaciones:
+Prerequisites
 
-    Más lento que la ecualización de histograma estándar debido a su procesamiento por bloques.
-    Requiere configurar parámetros (e.g., tamaño de los bloques).
+Before running the script, ensure that you have the following installed:
 
-Estructura del Proyecto
+    Python 3.x: The script is compatible with Python 3.x versions.
+    OpenCV: For image processing operations.
+    NumPy: For numerical computations.
+    Matplotlib: For displaying images (optional, used in the script for visualization).
 
-proyecto_imagenes/
-├── images_clahe/               # Carpeta que contiene las imágenes originales para clahe
-├── images_equalization/        # Carpeta que contiene las imágenes originales para la equalizacion
-├── resultados/                 # Carpeta para guardar imágenes procesadas
-├── procesar_imagenes.py        # Script principal
-└── README.md                   # Documentación del proyecto
+Installation Guide
 
+    Clone the Repository:
 
+git clone https://github.com/yourusername/image_processing_project.git
+cd image_processing_project
 
-contrast limited adaptive histogram equalization (CLAHE)
-prevents this by limiting the amplification
-• CLAHE limits the amplification by clipping the histogram
-at a predefined value before computing the CDF
+Set Up a Virtual Environment (Optional but Recommended):
+
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+Install Required Packages:
+
+    pip install opencv-python-headless numpy matplotlib
+
+    Note: The opencv-python-headless package is used to avoid unnecessary GUI dependencies. If you require GUI functionalities, consider installing opencv-python instead.
+
+Usage Instructions
+
+To process images using the script, use the following command:
+
+python process_images.py <input_directory> <output_directory> <method>
+
+Parameters:
+
+    <input_directory>: Path to the directory containing the original images.
+    <output_directory>: Path to the directory where processed images will be saved.
+    <method>: The contrast enhancement method to use. Options are:
+        histogram_equalization: Applies standard histogram equalization.
+        clahe: Applies Contrast Limited Adaptive Histogram Equalization.
+
+Example Usage:
+
+    To apply Histogram Equalization:
+
+python process_images.py input_images/ output_images/ histogram_equalization
+
+To apply CLAHE:
+
+    python process_images.py input_images/ output_images/ clahe
+
+Detailed Explanation of the Script
+
+The process_images.py script is structured as follows:
+
+    Importing Libraries:
+
+import os
+import cv2
+import numpy as np
+from matplotlib import pyplot as plt
+
+    os: For handling directory and file operations.
+    cv2: OpenCV library for image processing functions.
+    numpy: For numerical operations, especially
+2. Definición de Funciones
+
+El script define varias funciones para manejar la carga, procesamiento y almacenamiento de imágenes:
+
+a. Función load_image(path):
+
+Esta función carga una imagen desde la ruta especificada utilizando OpenCV.
+
+def load_image(path):
+    """Loads an image in BGR format."""
+    image = cv2.imread(path)
+    if image is None:
+        raise FileNotFoundError(f"Unable to load image at path: {path}")
+    return image
+
+    cv2.imread(path): Lee la imagen en formato BGR.
+    Verifica si la imagen se ha cargado correctamente; si no, lanza una excepción.
+
+b. Función save_image(path, image):
+
+Guarda la imagen procesada en la ruta especificada.
+
+def save_image(path, image):
+    """Saves the image to the specified path."""
+    cv2.imwrite(path, image)
+
+    cv2.imwrite(path, image): Escribe la imagen en el disco en la ruta proporcionada.
+
+c. Función display_image(title, image):
+
+Muestra la imagen utilizando Matplotlib para visualización.
+
+def display_image(title, image):
+    """Displays an image using matplotlib."""
+    image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    plt.imshow(image_rgb)
+    plt.title(title)
+    plt.axis('off')
+    plt.show()
+
+    cv2.cvtColor(image, cv2.COLOR_BGR2RGB): Convierte la imagen de BGR a RGB para una visualización correcta con Matplotlib.
+    plt.imshow(image_rgb): Muestra la imagen.
+    plt.title(title): Establece el título de la ventana de visualización.
+    plt.axis('off'): Oculta los ejes para una visualización más limpia.
+    plt.show(): Renderiza la imagen en una ventana emergente.
+
+d. Función histogram_equalization(image):
+
+Aplica la ecualización de histograma a una imagen en escala de grises o a cada canal de una imagen en color.
+
+def histogram_equalization(image):
+    """Applies histogram equalization to a grayscale or color image."""
+    if len(image.shape) == 2:  # Grayscale image
+        return cv2.equalizeHist(image)
+    elif len(image.shape) == 3:  # Color image
+        channels = cv2.split(image)
+        eq_channels = [cv2.equalizeHist(channel) for channel in channels]
+        return cv2.merge(eq_channels)
+    else:
+        raise ValueError("Unsupported image format.")
+
+    Para imágenes en escala de grises:
+        cv2.equalizeHist(image): Aplica la ecualización de histograma.
+    Para imágenes en color:
+        cv2.split(image): Divide la imagen en sus canales de color individuales.
+        Aplica la ecualización de histograma a cada canal por separado.
+        cv2.merge(eq_channels): Combina los canales ecualizados en una sola imagen.
+
+e. Función apply_clahe(image, clip_limit=2.0, tile_grid_size=(8, 8)):
+
+Aplica CLAHE a una imagen en escala de grises o a cada canal de una imagen en color.
+
+def apply_clahe(image, clip_limit=2.0, tile_grid_size=(8, 8)):
+    """Applies CLAHE to a grayscale or color image."""
+    clahe = cv2.createCLAHE(clipLimit=clip_limit, tileGridSize=tile_grid_size)
+    if len(image.shape) == 2:  # Grayscale image
+        return clahe.apply(image)
+    elif len(image.shape) == 3:  # Color image
+        channels = cv2.split(image)
+        clahe_channels = [clahe.apply(channel) for channel in channels]
+        return cv2.merge(clahe_channels)
+    else:
+        raise ValueError("Unsupported image format.")
+
+    cv2.createCLAHE(clipLimit=clip_limit, tileGridSize=tile_grid_size): Crea un objeto CLAHE con los parámetros especificados.
+    Para imágenes en escala de grises:
+        clahe.apply(image): Aplica CLAHE a la imagen.
+    Para imágenes en color:
+        cv2.split(image): Divide la imagen en canales individuales.
+        Aplica CLAHE a cada canal por separado.
+        cv2.merge(clahe_channels): Combina los canales procesados en una sola imagen.
+
+f. Función process_images(input_folder, output_folder, method):
+
+Procesa todas las imágenes en la carpeta de entrada utilizando el método especificado y guarda los resultados en la carpeta de salida.
+
+def process_images(input_folder, output_folder, method):
+    """Processes all images in the input folder using the specified method and saves them to the output folder."""
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
+    for filename in os.listdir(input_folder):
+        input_path = os.path.join(input_folder, filename)
+        output_path = os.path.join(output_folder, filename)
+
+        try:
+            image = load_image(input_path)
+            if method == 'histogram_equalization':
+                processed_image = histogram_equalization(image)
+            elif method == 'clahe':
+                processed_image = apply_clahe(image)
+            else:
+                raise ValueError("Unrecognized method. Use 'histogram_equalization' or 'clahe'.")
+            save_image(output_path, processed_image)
+            print(f"Processed and saved: {output_path}")
+        except Exception as e:
+            print(f"Error processing {input_path}: {e}")
