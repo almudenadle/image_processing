@@ -190,6 +190,9 @@ Function 2: equalize_grayscale(image)
     
         Reconstruct Image:
             The function returns the equalized image as a 2D array.
+
+            ![imagen](https://github.com/user-attachments/assets/1f5d792b-3224-4774-84e5-db89dd50c9a9)
+
 Function: create_custom_clahe
 
     Parameters:
@@ -243,6 +246,9 @@ Apply_clahe
 
     Error Handling:
         If the input image is neither grayscale nor color, raises a ValueError.
+
+        ![imagen](https://github.com/user-attachments/assets/df526844-44a7-4936-9855-d97ae14406fe)
+
 
 process_images(input_dir, output_dir, method)
 
