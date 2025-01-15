@@ -246,9 +246,9 @@ Apply_clahe
 
     Error Handling:
         If the input image is neither grayscale nor color, raises a ValueError.
+  
 
-        ![imagen](https://github.com/user-attachments/assets/df526844-44a7-4936-9855-d97ae14406fe)
-
+![imagen](https://github.com/user-attachments/assets/0c673c0a-74bb-42f8-9746-d3ac7126ba6f)
 
 process_images(input_dir, output_dir, method)
 
