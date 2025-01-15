@@ -11,7 +11,6 @@ Table of Contents
     Prerequisites
     Usage Instructions
     Detailed Explanation of the Script
-![imagen](https://github.com/user-attachments/assets/1cede5c0-9163-405f-8907-0a7853242a6c)
 
 Project Overview
 
@@ -26,6 +25,9 @@ Understanding Histogram Equalization
 
 Histogram Equalization is a technique used to improve the global contrast of an image by redistributing the intensity values. It transforms the intensity histogram of the image to approximate a uniform distribution, effectively spreading out the most frequent intensity values. This results in areas of lower contrast gaining a higher contrast, making the image more interpretable.
 
+![imagen](https://github.com/user-attachments/assets/9879f537-4cfe-4b90-9f1f-5ff881258759)
+
+
 Advantages:
 
     Enhances the overall contrast of the image.
@@ -39,6 +41,9 @@ Limitations:
 Understanding CLAHE
 
 Contrast Limited Adaptive Histogram Equalization (CLAHE) is an improvement over standard histogram equalization. It operates on small regions in the image, called tiles, and applies histogram equalization to each. By limiting the contrast amplification, CLAHE prevents the over-amplification of noise and avoids artifacts in homogeneous areas.
+
+![imagen](https://github.com/user-attachments/assets/9179b47b-8b17-4c5b-adc0-717763ed0650)
+
 
 Advantages:
 
