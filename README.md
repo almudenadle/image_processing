@@ -191,7 +191,9 @@ Function 2: equalize_grayscale(image)
         Reconstruct Image:
             The function returns the equalized image as a 2D array.
 
-            ![imagen](https://github.com/user-attachments/assets/1f5d792b-3224-4774-84e5-db89dd50c9a9)
+            
+![imagen](https://github.com/user-attachments/assets/edce8442-496f-4802-b5ab-2bafa7a7510b)
+
 
 Function: create_custom_clahe
 
