@@ -11,6 +11,7 @@ Table of Contents
     Prerequisites
     Usage Instructions
     Detailed Explanation of the Script
+![imagen](https://github.com/user-attachments/assets/1cede5c0-9163-405f-8907-0a7853242a6c)
 
 Project Overview
 
